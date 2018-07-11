@@ -47,3 +47,28 @@ html, body, #root {
 img {
   max-width: 100%;
 }
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fdcf72;
+}
+
+.wrapper {
+  height: 400px;
+  width: 600px;
+}
+
+.app-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.menu-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 15px;
+}
