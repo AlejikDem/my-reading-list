@@ -1,15 +1,49 @@
-body {
-  font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
-  margin: 0;
-  text-align: center;
-  color: #293c4b;
+@font-face {
+  font-family: 'Fantasque Sans Mono';
+  src: url('./fonts/FantasqueSansMono-Regular.woff2') format('woff2'),
+       url('./fonts/FantasqueSansMono-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
 }
 
-h1 {
-  font-size: 30px;
+@font-face {
+  font-family: 'Fantasque Sans Mono';
+  src: url('./fonts/FantasqueSansMono-Bold.woff2') format('woff2'),
+       url('./fonts/FantasqueSansMono-Bold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Fantasque Sans Mono';
+  src: url('./fonts/FantasqueSansMono-Italic.woff2') format('woff2'),
+       url('./fonts/FantasqueSansMono-Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Fantasque Sans Mono';
+  src: url('./fonts/FantasqueSansMono-BoldItalic.woff2') format('woff2'),
+       url('./fonts/FantasqueSansMono-BoldItalic.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Fantasque Sans Mono', sans-serif;
+}
+
+html * {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
 }
 
 img {
-  margin: 20px 0;
-  max-width: 200px;
+  max-width: 100%;
 }
