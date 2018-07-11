@@ -1,7 +1,11 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1)
+import Html exposing (Html, text, div, h1, i)
 import Html.Attributes exposing (..)
+import Msg exposing (Msg)
+import Dater exposing (transformDate)
+import Utils exposing (renderRating)
+import Date
 
 
 ---- MODEL ----
@@ -10,7 +14,7 @@ import Html.Attributes exposing (..)
 type alias ActiveBook =
     { id : Int
     , title : String
-    , startDate : String
+    , startDate : Result String Date.Date
     , expectation : String
     , isFiction : Bool
     }
@@ -19,13 +23,13 @@ type alias ActiveBook =
 type alias FinishedBook =
     { id : Int
     , title : String
-    , startDate : String
+    , startDate : Result String Date.Date
     , expectation : String
     , isFiction : Bool
     , rate : Int
     , impression : String
     , readToEnd : Bool
-    , endDate : String
+    , endDate : Result String Date.Date
     }
 
 
@@ -40,13 +44,13 @@ initialModel =
     { activeBooks =
         [ { id = 0
           , title = "First Active"
-          , startDate = "25 June"
+          , startDate = Date.fromString "Jun 25 2018"
           , expectation = "I think it will be great book"
           , isFiction = False
           }
         , { id = 1
           , title = "Second"
-          , startDate = "27 June"
+          , startDate = Date.fromString "Jun 28 2018"
           , expectation = "I am not sure"
           , isFiction = True
           }
@@ -54,23 +58,23 @@ initialModel =
     , finishedBooks =
         [ { id = 2
           , title = "Stay Alive"
-          , startDate = "2 May"
+          , startDate = Date.fromString "May 2 2018"
           , expectation = "I think it will be great book"
           , isFiction = True
           , rate = 4
           , impression = "It was great"
           , readToEnd = True
-          , endDate = "12 May"
+          , endDate = Date.fromString "May 12 2018"
           }
         , { id = 3
           , title = "Second"
-          , startDate = "12 April"
+          , startDate = Date.fromString "April 12 2018"
           , expectation = "I am not sure"
           , isFiction = False
           , rate = 3
           , impression = "Not so good"
           , readToEnd = False
-          , endDate = "1 May"
+          , endDate = Date.fromString "May 1 2018"
           }
         ]
     }
@@ -85,10 +89,6 @@ init =
 ---- UPDATE ----
 
 
-type Msg
-    = NoOp
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -98,16 +98,55 @@ update msg model =
 
 
 -- VIEW ----
+-- <i class="fas far fa-star"></i>
 
 
 activeBookItem : ActiveBook -> Html Msg
 activeBookItem book =
-    div [] [ text book.title ]
+    div
+        [ classList
+            [ ( "book", True )
+            , ( "book--fiction", book.isFiction )
+            , ( "book--non-fiction", not book.isFiction )
+            ]
+        ]
+        [ div [ class "book__title" ] [ text book.title ]
+        , div [ class "book__expectation book-icon" ]
+            [ i [ class "fas fa-book" ] []
+            ]
+        , div [ class "book__date" ] [ text (transformDate book.startDate) ]
+        , div [ class "book__edit book-icon" ]
+            [ i [ class "fas fa-pencil-alt" ] []
+            ]
+        , div [ class "book__finish book-icon" ]
+            [ i [ class "fas fa-flag-checkered" ] []
+            ]
+        ]
 
 
 finishedBookItem : FinishedBook -> Html Msg
 finishedBookItem book =
-    div [] [ text book.title ]
+    div
+        [ classList
+            [ ( "book", True )
+            , ( "book--fiction", book.isFiction )
+            , ( "book--non-fiction", not book.isFiction )
+            ]
+        ]
+        [ div [ class "book__title" ] [ text book.title ]
+        , div [ class "book__rate" ] (renderRating book.rate 5)
+        , div [ class "book-icon" ]
+            [ i [ class "fas fa-book" ] []
+            ]
+        , div [ class "book-icon" ]
+            [ i [ class "fab fa-tripadvisor" ] []
+            ]
+        , div [ class "book-icon" ]
+            [ i [ class "far fa-calendar-alt" ] []
+            ]
+
+        -- , div [ class "book__date" ] [ text (transformDate book.startDate ++ " - " ++ transformDate book.endDate) ]
+        ]
 
 
 view : Model -> Html Msg
@@ -119,6 +158,7 @@ view model =
             [ div
                 [ class "books-active books" ]
                 (List.map activeBookItem model.activeBooks)
+            , div [ class "divider" ] []
             , div
                 [ class "books-archived books" ]
                 (List.map finishedBookItem model.finishedBooks)
