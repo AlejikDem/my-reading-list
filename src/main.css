@@ -52,12 +52,12 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fdcf72;
+  background-color: #ffd786;
 }
 
 .wrapper {
   height: 400px;
-  width: 600px;
+  width: 500px;
 }
 
 .app-title {
@@ -71,4 +71,63 @@ img {
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 15px;
+}
+
+.divider {
+  height: 1px;
+  background-color: #000;
+  margin: 15px 0;
+}
+
+.book-icon {
+  padding: 0 5px;
+  border-left: 1px solid #000;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* #21ba45
+#db2828
+#b5cc18
+#2185d0 */
+
+.book {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: 38px;
+  margin-bottom: 5px;
+  border: 2px solid #000;
+  border-radius: 5px;
+}
+
+.book--non-fiction {
+  border-color: #21ba45;
+}
+
+.book--fiction {
+  border-color: #db2828;
+}
+
+.book>div {
+  display: flex;
+  align-items: center;
+}
+
+.book__title {
+  flex-grow: 1;
+  padding: 0 10px;
+  font-size: 20px;
+}
+
+.book__date {
+  font-size: 12px;
+  border-left: 1px solid #000;
+  padding: 0 5px;
+}
+
+.book__rate {
+  padding: 0 5px;
+  border-left: 1px solid #000;
+
 }
