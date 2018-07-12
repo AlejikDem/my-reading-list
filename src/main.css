@@ -86,6 +86,36 @@ img {
   cursor: pointer;
 }
 
+.btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+.btn:hover {
+  color: #fff;
+}
+
+.btn:focus {
+  outline: none;
+  color: #fff;
+}
+
+.btn.medium {
+  padding: 5px 10px;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+.btn.success {
+  background-color: #21ba45;
+}
+
+.btn.danger {
+  background-color: #db2828;
+}
+
 /* #21ba45
 #db2828
 #b5cc18
@@ -129,5 +159,9 @@ img {
 .book__rate {
   padding: 0 5px;
   border-left: 1px solid #000;
+}
 
+.modal-top {
+  text-align: center;
+  font-size: 22px;
 }

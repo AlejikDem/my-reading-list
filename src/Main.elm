@@ -1,10 +1,12 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, i)
+import Html exposing (Html, text, div, h1, i, button)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Msg exposing (Msg)
 import Dater exposing (transformDate)
 import Utils exposing (renderRating)
+import Dialog exposing (..)
 import Date
 
 
@@ -36,6 +38,7 @@ type alias FinishedBook =
 type alias Model =
     { activeBooks : List ActiveBook
     , finishedBooks : List FinishedBook
+    , showAddBookModal : Bool
     }
 
 
@@ -77,6 +80,7 @@ initialModel =
           , endDate = Date.fromString "May 1 2018"
           }
         ]
+    , showAddBookModal = False
     }
 
 
@@ -92,13 +96,12 @@ init =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        _ ->
-            ( model, Cmd.none )
+        Msg.ToggleAddBookModal bool ->
+            ( { model | showAddBookModal = bool }, Cmd.none )
 
 
 
 -- VIEW ----
--- <i class="fas far fa-star"></i>
 
 
 activeBookItem : ActiveBook -> Html Msg
@@ -144,16 +147,37 @@ finishedBookItem book =
         , div [ class "book-icon" ]
             [ i [ class "far fa-calendar-alt" ] []
             ]
-
-        -- , div [ class "book__date" ] [ text (transformDate book.startDate ++ " - " ++ transformDate book.endDate) ]
         ]
+
+
+addBookModal : Dialog.Config Msg
+addBookModal =
+    { closeMessage = Nothing
+    , containerClass = Just "add-modal"
+    , header = Just (div [ class "modal-top" ] [ text "Start new book" ])
+    , body = Just (div [] [ text "Let me tell you something important..." ])
+    , footer =
+        Just
+            (div
+                [ class "add-modal__buttons" ]
+                [ button [ class "btn success medium" ] [ text "Start Book" ]
+                , button [ class "btn danger medium" ] [ text "Cancel" ]
+                ]
+            )
+    }
 
 
 view : Model -> Html Msg
 view model =
     div [ class "wrapper" ]
         [ h1 [ class "app-title" ] [ text "My Reading List" ]
-        , div [ class "menu-buttons" ] [ text "buttons" ]
+        , div [ class "menu-buttons" ]
+            [ button
+                [ class "btn success medium"
+                , onClick (Msg.ToggleAddBookModal True)
+                ]
+                [ text "Start new book" ]
+            ]
         , div [ class "books-wrapper" ]
             [ div
                 [ class "books-active books" ]
@@ -163,6 +187,12 @@ view model =
                 [ class "books-archived books" ]
                 (List.map finishedBookItem model.finishedBooks)
             ]
+        , Dialog.view
+            (if model.showAddBookModal then
+                Just addBookModal
+             else
+                Nothing
+            )
         ]
 
 
