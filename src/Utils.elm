@@ -3,10 +3,22 @@ module Utils exposing (..)
 import Msg exposing (Msg)
 import Html exposing (Html, i)
 import Html.Attributes exposing (classList)
+import Html.Events exposing (onClick)
+import Model exposing (ActiveBook, CurrentBook, emptyBook)
 
 
-renderRating : Int -> Int -> List (Html Msg)
-renderRating rate max =
+convertActiveToCurr : ActiveBook -> CurrentBook
+convertActiveToCurr book =
+    { emptyBook
+        | id = Just book.id
+        , title = book.title
+        , expectation = book.expectation
+        , isFiction = book.isFiction
+    }
+
+
+renderRating : Int -> Int -> Bool -> List (Html Msg)
+renderRating rate max clickable =
     let
         aux rate max =
             if max == 0 then
@@ -15,14 +27,26 @@ renderRating rate max =
                 let
                     full =
                         rate > 0
-                in
-                    (i
-                        [ classList
+
+                    classes =
+                        classList
                             [ ( "fa-star", True )
                             , ( "fas", full )
                             , ( "far", not full )
+                            , ( "clickable", clickable )
                             ]
-                        ]
+
+                    action =
+                        onClick (Msg.SetRate max)
+
+                    attrs =
+                        if clickable then
+                            classes :: action :: []
+                        else
+                            [ classes ]
+                in
+                    (i
+                        attrs
                         []
                     )
                         :: renderRating
@@ -32,5 +56,6 @@ renderRating rate max =
                                 rate
                             )
                             (max - 1)
+                            clickable
     in
         aux rate max
