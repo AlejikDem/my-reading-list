@@ -41,10 +41,10 @@ finishBookModal model =
                         (div
                             [ class "modal__buttons" ]
                             [ button
-                                [ class "btn success medium", onClick (Msg.ToggleFinishBookModal False) ]
+                                [ class "btn success medium", onClick (Msg.CloseFinishBookModal) ]
                                 [ text "Start Book" ]
                             , button
-                                [ class "btn danger medium", onClick (Msg.ToggleFinishBookModal False) ]
+                                [ class "btn danger medium", onClick (Msg.CloseFinishBookModal) ]
                                 [ text "Cancel" ]
                             ]
                         )

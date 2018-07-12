@@ -26,7 +26,7 @@ activeBookItem book =
         , div [ class "book__edit book-icon" ]
             [ i [ class "fas fa-pencil-alt", onClick (Msg.ToggleEdit book) ] []
             ]
-        , div [ class "book__finish book-icon", onClick (Msg.ToggleFinishBookModal True) ]
+        , div [ class "book__finish book-icon", onClick (Msg.OpenFinishBook book) ]
             [ i [ class "fas fa-flag-checkered" ] []
             ]
         ]

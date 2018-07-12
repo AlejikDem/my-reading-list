@@ -40,10 +40,10 @@ addBookModal model =
                         (div
                             [ class "modal__buttons" ]
                             [ button
-                                [ class "btn success medium", onClick (Msg.ToggleAddBookModal False) ]
+                                [ class "btn success medium", onClick (Msg.CloseAddBookModal) ]
                                 [ text "Start Book" ]
                             , button
-                                [ class "btn danger medium", onClick (Msg.ToggleAddBookModal False) ]
+                                [ class "btn danger medium", onClick (Msg.CloseAddBookModal) ]
                                 [ text "Cancel" ]
                             ]
                         )

@@ -4,7 +4,7 @@ import Html exposing (Html, text, div, h1, i, button, input, textarea)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Msg exposing (Msg)
-import Model exposing (Model, ActiveBook, FinishedBook, initialModel)
+import Model exposing (Model, ActiveBook, FinishedBook, initialModel, emptyBook)
 import AddBookModal exposing (addBookModal)
 import FinishBookModal exposing (finishBookModal)
 import BookItems exposing (activeBookItem, finishedBookItem)
@@ -26,11 +26,27 @@ init =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg.ToggleAddBookModal bool ->
-            ( { model | showAddBookModal = bool }, Cmd.none )
+        Msg.CloseAddBookModal ->
+            ( { model | showAddBookModal = False }, Cmd.none )
 
-        Msg.ToggleFinishBookModal bool ->
-            ( { model | showFinishBookModal = bool }, Cmd.none )
+        Msg.CloseFinishBookModal ->
+            ( { model | showFinishBookModal = False }, Cmd.none )
+
+        Msg.OpenAddBook ->
+            ( { model
+                | currentBook = emptyBook
+                , showAddBookModal = True
+              }
+            , Cmd.none
+            )
+
+        Msg.OpenFinishBook book ->
+            ( { model
+                | currentBook = convertActiveToCurr book
+                , showFinishBookModal = True
+              }
+            , Cmd.none
+            )
 
         Msg.ToggleEdit book ->
             ( { model
@@ -62,7 +78,7 @@ view model =
         , div [ class "menu-buttons" ]
             [ button
                 [ class "btn success medium"
-                , onClick (Msg.ToggleAddBookModal True)
+                , onClick Msg.OpenAddBook
                 ]
                 [ text "Start new book" ]
             ]

@@ -4,7 +4,9 @@ import Model exposing (ActiveBook)
 
 
 type Msg
-    = ToggleAddBookModal Bool
-    | ToggleFinishBookModal Bool
+    = CloseAddBookModal
+    | CloseFinishBookModal
+    | OpenAddBook
+    | OpenFinishBook ActiveBook
     | ToggleEdit ActiveBook
     | SetRate Int
