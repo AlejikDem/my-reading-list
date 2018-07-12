@@ -1,87 +1,17 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, i, button)
+import Html exposing (Html, text, div, h1, i, button, input, textarea)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Msg exposing (Msg)
-import Dater exposing (transformDate)
-import Utils exposing (renderRating)
-import Dialog exposing (..)
-import Date
+import Model exposing (Model, ActiveBook, FinishedBook, initialModel)
+import AddBookModal exposing (addBookModal)
+import FinishBookModal exposing (finishBookModal)
+import BookItems exposing (activeBookItem, finishedBookItem)
+import Utils exposing (convertActiveToCurr)
 
 
 ---- MODEL ----
-
-
-type alias ActiveBook =
-    { id : Int
-    , title : String
-    , startDate : Result String Date.Date
-    , expectation : String
-    , isFiction : Bool
-    }
-
-
-type alias FinishedBook =
-    { id : Int
-    , title : String
-    , startDate : Result String Date.Date
-    , expectation : String
-    , isFiction : Bool
-    , rate : Int
-    , impression : String
-    , readToEnd : Bool
-    , endDate : Result String Date.Date
-    }
-
-
-type alias Model =
-    { activeBooks : List ActiveBook
-    , finishedBooks : List FinishedBook
-    , showAddBookModal : Bool
-    }
-
-
-initialModel : Model
-initialModel =
-    { activeBooks =
-        [ { id = 0
-          , title = "First Active"
-          , startDate = Date.fromString "Jun 25 2018"
-          , expectation = "I think it will be great book"
-          , isFiction = False
-          }
-        , { id = 1
-          , title = "Second"
-          , startDate = Date.fromString "Jun 28 2018"
-          , expectation = "I am not sure"
-          , isFiction = True
-          }
-        ]
-    , finishedBooks =
-        [ { id = 2
-          , title = "Stay Alive"
-          , startDate = Date.fromString "May 2 2018"
-          , expectation = "I think it will be great book"
-          , isFiction = True
-          , rate = 4
-          , impression = "It was great"
-          , readToEnd = True
-          , endDate = Date.fromString "May 12 2018"
-          }
-        , { id = 3
-          , title = "Second"
-          , startDate = Date.fromString "April 12 2018"
-          , expectation = "I am not sure"
-          , isFiction = False
-          , rate = 3
-          , impression = "Not so good"
-          , readToEnd = False
-          , endDate = Date.fromString "May 1 2018"
-          }
-        ]
-    , showAddBookModal = False
-    }
 
 
 init : ( Model, Cmd Msg )
@@ -99,72 +29,30 @@ update msg model =
         Msg.ToggleAddBookModal bool ->
             ( { model | showAddBookModal = bool }, Cmd.none )
 
+        Msg.ToggleFinishBookModal bool ->
+            ( { model | showFinishBookModal = bool }, Cmd.none )
+
+        Msg.ToggleEdit book ->
+            ( { model
+                | currentBook = convertActiveToCurr book
+                , showAddBookModal = True
+              }
+            , Cmd.none
+            )
+
+        Msg.SetRate rate ->
+            let
+                currBook =
+                    model.currentBook
+
+                newCurrentBook =
+                    { currBook | rate = rate }
+            in
+                ( { model | currentBook = newCurrentBook }, Cmd.none )
+
 
 
 -- VIEW ----
-
-
-activeBookItem : ActiveBook -> Html Msg
-activeBookItem book =
-    div
-        [ classList
-            [ ( "book", True )
-            , ( "book--fiction", book.isFiction )
-            , ( "book--non-fiction", not book.isFiction )
-            ]
-        ]
-        [ div [ class "book__title" ] [ text book.title ]
-        , div [ class "book__expectation book-icon" ]
-            [ i [ class "fas fa-book" ] []
-            ]
-        , div [ class "book__date" ] [ text (transformDate book.startDate) ]
-        , div [ class "book__edit book-icon" ]
-            [ i [ class "fas fa-pencil-alt" ] []
-            ]
-        , div [ class "book__finish book-icon" ]
-            [ i [ class "fas fa-flag-checkered" ] []
-            ]
-        ]
-
-
-finishedBookItem : FinishedBook -> Html Msg
-finishedBookItem book =
-    div
-        [ classList
-            [ ( "book", True )
-            , ( "book--fiction", book.isFiction )
-            , ( "book--non-fiction", not book.isFiction )
-            ]
-        ]
-        [ div [ class "book__title" ] [ text book.title ]
-        , div [ class "book__rate" ] (renderRating book.rate 5)
-        , div [ class "book-icon" ]
-            [ i [ class "fas fa-book" ] []
-            ]
-        , div [ class "book-icon" ]
-            [ i [ class "fab fa-tripadvisor" ] []
-            ]
-        , div [ class "book-icon" ]
-            [ i [ class "far fa-calendar-alt" ] []
-            ]
-        ]
-
-
-addBookModal : Dialog.Config Msg
-addBookModal =
-    { closeMessage = Nothing
-    , containerClass = Just "add-modal"
-    , header = Just (div [ class "modal-top" ] [ text "Start new book" ])
-    , body = Just (div [] [ text "Let me tell you something important..." ])
-    , footer =
-        Just
-            (div
-                [ class "add-modal__buttons" ]
-                [ button [ class "btn success medium" ] [ text "Start Book" ]
-                , button [ class "btn danger medium" ] [ text "Cancel" ]
-                ]
-            )
-    }
 
 
 view : Model -> Html Msg
@@ -187,12 +75,8 @@ view model =
                 [ class "books-archived books" ]
                 (List.map finishedBookItem model.finishedBooks)
             ]
-        , Dialog.view
-            (if model.showAddBookModal then
-                Just addBookModal
-             else
-                Nothing
-            )
+        , addBookModal model
+        , finishBookModal model
         ]
 
 

@@ -165,3 +165,27 @@ img {
   text-align: center;
   font-size: 22px;
 }
+
+.modal-form__item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.modal-form__label {
+  width: 140px;
+}
+
+.modal-form__field {
+  width: 240px;
+}
+
+.modal-form__field input:not([type="checkbox"]), .modal-form__field textarea {
+  outline: none;
+  width: 100%;
+}
+
+.clickable {
+  cursor: pointer;
+}
