@@ -189,3 +189,24 @@ img {
 .clickable {
   cursor: pointer;
 }
+
+.tooltiper {
+  position: relative;
+}
+
+.tooltiper i:hover~.book-tooltip {
+  display: block;
+}
+
+.book-tooltip {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 220px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 10px;
+  font-size: 14px;
+  z-index: 10;
+}
