@@ -85,7 +85,11 @@ view model =
         , div [ class "books-wrapper" ]
             [ div
                 [ class "books-active books" ]
-                (List.map activeBookItem model.activeBooks)
+                (if List.isEmpty model.activeBooks then
+                    [ text "No active books" ]
+                 else
+                    (List.map activeBookItem model.activeBooks)
+                )
             , div [ class "divider" ] []
             , div
                 [ class "books-archived books" ]
